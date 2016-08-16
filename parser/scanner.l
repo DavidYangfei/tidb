@@ -236,6 +236,7 @@ current_date	{c}{u}{r}{r}{e}{n}{t}_{d}{a}{t}{e}
 curtime 	{c}{u}{r}{t}{i}{m}{e}
 current_time	{c}{u}{r}{r}{e}{n}{t}_{t}{i}{m}{e}
 current_user	{c}{u}{r}{r}{e}{n}{t}_{u}{s}{e}{r}
+data		{d}{a}{t}{a}
 database	{d}{a}{t}{a}{b}{a}{s}{e}
 databases	{d}{a}{t}{a}{b}{a}{s}{e}{s}
 date_add	{d}{a}{t}{e}_{a}{d}{d}
@@ -264,10 +265,12 @@ duplicate	{d}{u}{p}{l}{i}{c}{a}{t}{e}
 dynamic		{d}{y}{n}{a}{m}{i}{c}
 else		{e}{l}{s}{e}
 enable		{e}{n}{a}{b}{l}{e}
+enclosed	{e}{n}{c}{l}{o}{s}{e}{d}
 end		{e}{n}{d}
 engine		{e}{n}{g}{i}{n}{e}
 engines		{e}{n}{g}{i}{n}{e}{s}
 escape		{e}{s}{c}{a}{p}{e}
+escaped		{e}{s}{c}{a}{p}{e}{d}
 execute		{e}{x}{e}{c}{u}{t}{e}
 exists		{e}{x}{i}{s}{t}{s}
 explain		{e}{x}{p}{l}{a}{i}{n}
@@ -300,6 +303,7 @@ ifnull		{i}{f}{n}{u}{l}{l}
 ignore		{i}{g}{n}{o}{r}{e}
 in		{i}{n}
 index		{i}{n}{d}{e}{x}
+infile		{i}{n}{f}{i}{l}{e}
 inner 		{i}{n}{n}{e}{r}
 insert		{i}{n}{s}{e}{r}{t}
 interval	{i}{n}{t}{e}{r}{v}{a}{l}
@@ -318,6 +322,8 @@ length		{l}{e}{n}{g}{t}{h}
 level		{l}{e}{v}{e}{l}
 like		{l}{i}{k}{e}
 limit		{l}{i}{m}{i}{t}
+lines		{l}{i}{n}{e}{s}
+load		{l}{o}{a}{d}
 local		{l}{o}{c}{a}{l}
 locate		{l}{o}{c}{a}{t}{e}
 lock		{l}{o}{c}{k}
@@ -382,6 +388,7 @@ sleep		{s}{l}{e}{e}{p}
 some		{s}{o}{m}{e}
 space		{s}{p}{a}{c}{e}
 start		{s}{t}{a}{r}{t}
+starting	{s}{t}{a}{r}{t}{i}{n}{g}
 statsPersistent	{s}{t}{a}{t}{s}_{p}{e}{r}{s}{i}{s}{t}{e}{n}{t}
 status          {s}{t}{a}{t}{u}{s}
 subdate		{s}{u}{b}{d}{a}{t}{e}
@@ -393,6 +400,7 @@ sum		{s}{u}{m}
 sysdate		{s}{y}{s}{d}{a}{t}{e}
 table		{t}{a}{b}{l}{e}
 tables		{t}{a}{b}{l}{e}{s}
+terminated	{t}{e}{r}{m}{i}{n}{a}{t}{e}{d}
 then		{t}{h}{e}{n}
 to		{t}{o}
 trailing	{t}{r}{a}{i}{l}{i}{n}{g}
@@ -669,6 +677,7 @@ action		{a}{c}{t}{i}{o}{n}
 			return currentTime
 {current_user}		lval.item = string(l.val)
 			return currentUser
+{data}			return data
 {database}		lval.item = string(l.val)
 			return database
 {databases}		return databases
@@ -721,6 +730,7 @@ action		{a}{c}{t}{i}{o}{n}
 {else}			return elseKwd
 {enable}		lval.ident = string(l.val)
 			return enable
+{enclosed}		return enclosed
 {end}			lval.ident = string(l.val)
 			return end
 {engine}		lval.ident = string(l.val)
@@ -732,6 +742,7 @@ action		{a}{c}{t}{i}{o}{n}
 {enum}			return enum
 {escape}		lval.ident = string(l.val)
 			return escape
+{escaped}		return escaped
 {exists}		return exists
 {explain}		return explain
 {extract}		lval.item = string(l.val)
@@ -783,6 +794,7 @@ action		{a}{c}{t}{i}{o}{n}
 			return isNull
 {ignore}		return ignore
 {index}			return index
+{infile}		return infile
 {inner} 		return inner
 {insert}		return insert
 {interval}		return interval
@@ -807,6 +819,8 @@ action		{a}{c}{t}{i}{o}{n}
 			return level
 {like}			return like
 {limit}			return limit
+{lines}			return lines
+{load}			return load
 {local}			lval.ident = string(l.val)
 			return local
 {locate}		lval.ident = string(l.val)
@@ -943,6 +957,7 @@ action		{a}{c}{t}{i}{o}{n}
 			return sleep
 {subdate}		lval.ident = string(l.val)
 			return subDate
+{starting}		return starting
 {strcmp}		lval.item = string(l.val)
 			return strcmp
 {substr}		lval.ident = string(l.val)
@@ -958,6 +973,7 @@ action		{a}{c}{t}{i}{o}{n}
 {table}			return tableKwd
 {tables}		lval.ident = string(l.val)
 			return tables
+{terminated}		return terminated
 {then}			return then
 {to}			return to
 {trailing}		return trailing

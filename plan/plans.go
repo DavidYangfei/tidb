@@ -15,10 +15,11 @@ package plan
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/pingcap/tidb/ast"
 	"github.com/pingcap/tidb/model"
 	"github.com/pingcap/tidb/util/types"
-	"strings"
 )
 
 // TableRange represents a range of row handle.
@@ -394,6 +395,17 @@ type Insert struct {
 
 	IsReplace bool
 	Priority  int
+}
+
+// LoadData represents a loaddata plan.
+type LoadData struct {
+	baseLogicalPlan
+
+	IsLocal    bool
+	Path       string
+	Table      *ast.TableName
+	FieldsInfo *ast.FieldsClause
+	LinesInfo  *ast.LinesClause
 }
 
 // DDL represents a DDL statement plan.

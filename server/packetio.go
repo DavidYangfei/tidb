@@ -40,6 +40,7 @@ import (
 	"net"
 
 	"github.com/juju/errors"
+	"github.com/ngaut/log"
 	"github.com/pingcap/tidb/mysql"
 )
 
@@ -73,7 +74,8 @@ func (p *packetIO) readPacket() ([]byte, error) {
 
 	length := int(uint32(header[0]) | uint32(header[1])<<8 | uint32(header[2])<<16)
 	if length < 1 {
-		return nil, errInvalidPayloadLen.Gen("invalid payload length %d", length)
+		log.Errorf("invalid payload length:%v", length)
+		// return nil, errInvalidPayloadLen.Gen("invalid payload length %d", length)
 	}
 
 	sequence := uint8(header[3])
