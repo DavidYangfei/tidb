@@ -397,35 +397,31 @@ func (cc *clientConn) handleLoadData(loadDataInfo *executor.LoadDataInfo) error 
 
 	var data1 []byte
 	var data2 []byte
-	data2, err = cc.readPacket()
-	if err != nil {
-		if terror.ErrorNotEqual(err, io.EOF) {
-			log.Error(errors.ErrorStack(err))
+	count := 0
+	for {
+		log.Warnf("load data count:%v", count)
+		data2, err = cc.readPacket()
+		if err != nil {
+			log.Warnf("load data1 err:%v", err)
+			if terror.ErrorNotEqual(err, io.EOF) {
+				log.Error(errors.ErrorStack(err))
+				return errors.Trace(err)
+			}
+		}
+		if len(data2) == 0 {
+			log.Warnf("load data form file end")
+			break
+		}
+		// TODO: cc.lastCmd = hack.String(data)
+		// token
+		err = loadDataInfo.InsertData(data1, data2)
+		if err != nil {
+			log.Warnf("load data2 err:%v", err)
 			return errors.Trace(err)
 		}
+		count++
+		data1 = data2
 	}
-	if len(data2) == 0 {
-		return errors.New("load data form file get empty data")
-	}
-	// TODO: cc.lastCmd = hack.String(data)
-	// token
-	err = loadDataInfo.InsertData(data1, data2)
-	if err != nil {
-		return errors.Trace(err)
-	}
-	data1 = data2
-
-	empty, err := cc.readPacket()
-	if err != nil {
-		if terror.ErrorNotEqual(err, io.EOF) {
-			log.Error(errors.ErrorStack(err))
-			return errors.Trace(err)
-		}
-	}
-	if len(empty) != 0 {
-		return errors.Errorf("load data should get empty data, but get:%v", empty)
-	}
-
 	log.Warnf("handleLoadData *******************************2")
 	cc.ctx.SetValue(executor.LoadDataVarKey, nil)
 	return nil

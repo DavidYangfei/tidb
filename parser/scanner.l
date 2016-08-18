@@ -677,7 +677,8 @@ action		{a}{c}{t}{i}{o}{n}
 			return currentTime
 {current_user}		lval.item = string(l.val)
 			return currentUser
-{data}			return data
+{data}			lval.ident= string(l.val)
+			return data
 {database}		lval.item = string(l.val)
 			return database
 {databases}		return databases

@@ -469,11 +469,11 @@ func (e *LoadDataInfo) InsertData(data1, data2 []byte) error {
 		row, err := e.insertVal.fillRowData(e.Table.Cols(), e.row, true)
 		log.Warnf("insert data row:%v", row)
 		if err != nil {
-			log.Warnf("Load Data: insert data:%v failed:%v", e.row, errors.Trace(err))
+			log.Warnf("Load Data: insert data:%v failed:%v", e.row, errors.ErrorStack(err))
 		}
 		_, err = e.Table.AddRecord(e.insertVal.ctx, row)
 		if err != nil {
-			log.Warnf("Load Data: insert data:%v failed:%v", row, errors.Trace(err))
+			log.Warnf("Load Data: insert data:%v failed:%v", row, errors.ErrorStack(err))
 		}
 		e.insertVal.currRow++
 		if isLastRow {
@@ -843,7 +843,7 @@ func (e *InsertValues) fillRowData(cols []*table.Column, vals []types.Datum, ign
 	return row, nil
 }
 
-func (e *InsertValues) initDefaultValues(row []types.Datum, marked map[int]struct{}, ignoreCastErr bool) error {
+func (e *InsertValues) initDefaultValues(row []types.Datum, marked map[int]struct{}, ignoreErr bool) error {
 	var defaultValueCols []*table.Column
 	for i, c := range e.Table.Cols() {
 		// It's used for retry.
@@ -862,7 +862,7 @@ func (e *InsertValues) initDefaultValues(row []types.Datum, marked map[int]struc
 				continue
 			}
 			val, err := row[i].ToInt64()
-			if err != nil {
+			if err != nil && !ignoreErr {
 				return errors.Trace(err)
 			}
 			if val != 0 {
@@ -901,7 +901,7 @@ func (e *InsertValues) initDefaultValues(row []types.Datum, marked map[int]struc
 
 		defaultValueCols = append(defaultValueCols, c)
 	}
-	if err := table.CastValues(e.ctx, row, defaultValueCols, ignoreCastErr); err != nil {
+	if err := table.CastValues(e.ctx, row, defaultValueCols, ignoreErr); err != nil {
 		return errors.Trace(err)
 	}
 

@@ -66,6 +66,7 @@ func newPacketIO(conn net.Conn) *packetIO {
 }
 
 func (p *packetIO) readPacket() ([]byte, error) {
+	log.Warnf("read packet starting")
 	var header [4]byte
 
 	if _, err := io.ReadFull(p.rb, header[:]); err != nil {
@@ -80,7 +81,8 @@ func (p *packetIO) readPacket() ([]byte, error) {
 
 	sequence := uint8(header[3])
 	if sequence != p.sequence {
-		return nil, errInvalidSequence.Gen("invalid sequence %d != %d", sequence, p.sequence)
+		log.Errorf("invalid sequence %d != %d", sequence, p.sequence)
+		// return nil, errInvalidSequence.Gen("invalid sequence %d != %d", sequence, p.sequence)
 	}
 
 	p.sequence++
@@ -89,6 +91,7 @@ func (p *packetIO) readPacket() ([]byte, error) {
 	if _, err := io.ReadFull(p.rb, data); err != nil {
 		return nil, errors.Trace(err)
 	}
+	log.Warnf("read packet length:%v", length)
 	if length < mysql.MaxPayloadLen {
 		return data, nil
 	}

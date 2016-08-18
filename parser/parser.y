@@ -31,6 +31,7 @@ import (
 	"github.com/pingcap/tidb/mysql"
 	"github.com/pingcap/tidb/ast"
 	"github.com/pingcap/tidb/model"
+	"github.com/ngaut/log"
 	"github.com/pingcap/tidb/parser/opcode"
 	"github.com/pingcap/tidb/util/charset"
 	"github.com/pingcap/tidb/util/types"
@@ -888,12 +889,14 @@ BinlogStmt:
 ColumnDef:
 	ColumnName Type ColumnOptionListOpt
 	{
+log.Warnf("parser col:%v", $1.(*ast.ColumnName).Name)
 		$$ = &ast.ColumnDef{Name: $1.(*ast.ColumnName), Tp: $2.(*types.FieldType), Options: $3.([]*ast.ColumnOption)}
 	}
 
 ColumnName:
 	Identifier
 	{
+log.Warnf("parser ident:%v", model.NewCIStr($1).O)
 		$$ = &ast.ColumnName{Name: model.NewCIStr($1)}
 	}
 |	Identifier '.' Identifier
@@ -1357,6 +1360,7 @@ CreateTableStmt:
 			switch te := te.(type) {
 			case *ast.ColumnDef:
 				columnDefs = append(columnDefs, te)
+	log.Warnf("c:%v", te.Name.Name.L)
 			case *ast.Constraint:
 				constraints = append(constraints, te)
 			}
